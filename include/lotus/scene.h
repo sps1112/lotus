@@ -6,6 +6,7 @@
 
 #include "core.h"
 #include "components.h"
+#include "resources.h"
 
 enum class ELight {
     SPOT,
@@ -19,13 +20,6 @@ namespace Lotus::Rendering
     class Shader;
 
     typedef std::shared_ptr<Shader> SRefShader;
-}
-
-namespace Lotus::Resource
-{
-    class Model;
-
-    typedef std::shared_ptr<Model> SRefModel;
 }
 
 namespace Lotus
@@ -109,9 +103,23 @@ namespace Lotus
 
     typedef std::shared_ptr<ALight> SRefALight;
 
+    class Skybox
+    {
+    public:
+        Lotus::Resource::SRefCubemap cubemap;
+        CModel model;
+
+        Skybox() = default;
+        Skybox(const std::vector<std::string>& paths, const Resource::SRefModel& model_, const Rendering::SRefShader& shader_);
+    };
+
+    typedef std::shared_ptr<Skybox> SRefSkybox;
+
+
     class Scene
     {
     public:
+        SRefSkybox skybox;
         SRefCamera camera;
         std::vector<SRefActor> actors;
         std::vector<SRefALight> pointLights;
@@ -124,9 +132,10 @@ namespace Lotus
 
         void addLight(const SRefALight& light, ELight type);
 
+        void addSkybox(const SRefSkybox& skybox_);
+
         std::vector<CPointLight> getPointLightProps() const;
         std::vector<CSpotlight> getSpotlightProps() const;
         std::vector<CDirectionalLight> getDirLightProps() const;
     };
-
 }

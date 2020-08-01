@@ -68,6 +68,18 @@ namespace Lotus::Resource
 
     typedef std::shared_ptr<Texture> SRefTexture;
 
+    class Cubemap : public IResource
+    {
+    public:
+        Cubemap(const std::vector<std::string>& paths);
+
+        unsigned int id = 0;
+
+        int import() override;
+    };
+
+    typedef std::shared_ptr<Cubemap> SRefCubemap;
+
 
     struct Vertex
     {
@@ -120,4 +132,6 @@ namespace Lotus::Resource
         std::vector<SRefTexture>
         loadMaterialTextures(const aiMaterial* mat, aiTextureType type, const std::string& typeName);
     };
+
+    typedef std::shared_ptr<Model> SRefModel;
 }

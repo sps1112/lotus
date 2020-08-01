@@ -30,6 +30,9 @@ namespace Lotus::Rendering
 
     void GLRenderer::renderScene(const Scene& scene)
     {
+        glClearColor(0.2f, 0.3f, 0.3, 0.5f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
         // Get camera properties
         glm::mat4 view = scene.camera->GetViewMatrix();
         glm::vec3 cameraPos = scene.camera->getPosition();
@@ -84,6 +87,36 @@ namespace Lotus::Rendering
                 renderModel(actor->model.model, shader);
             }
         }
+
+        // Render skybox
+//        SRefShader skyShader = scene.skybox->model.shader;
+//        skyShader->use();
+//        glm::mat4 skyView = glm::mat4(glm::mat3(view));
+//        skyShader->setMat4fv("view", GL_FALSE, glm::value_ptr(skyView));
+//        skyShader->setMat4fv("projection", GL_FALSE, glm::value_ptr(projection));
+//        skyShader->setInt("skybox", 0);
+//        renderSky(scene.skybox);
+    }
+
+    void GLRenderer::renderSky(SRefSkybox skybox)
+    {
+        const std::vector<Resource::Mesh> meshes = skybox->model.model->getMeshes();
+        if (meshes.size() != 1)
+        {
+            LOG_ERROR("Number of meshes in the skybox is not 1");
+            return;
+        }
+        glDepthFunc(GL_LEQUAL);
+        glBindVertexArray(meshes[0].VAO);
+
+        glActiveTexture(GL_TEXTURE0);
+        unsigned int id = skybox->cubemap.get()->id;
+        glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+
+        glDrawElements(GL_TRIANGLES, meshes[0].indices.size(), GL_UNSIGNED_INT, nullptr);
+
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS);
     }
 
     void GLRenderer::renderModel(const Resource::SRefModel& model, const SRefShader& shader)
@@ -152,8 +185,8 @@ namespace Lotus::Rendering
 
         // Initialize and configure GLFW
         glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, isDebug);
 

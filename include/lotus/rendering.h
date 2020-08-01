@@ -89,11 +89,14 @@ namespace Lotus::Rendering
         GLRenderer() = default;
 
         static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+
         static void debugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
-                                  const GLchar* message,
-                                  const void* userParam);
+                                         const GLchar* message,
+                                         const void* userParam);
 
         void renderModel(const Resource::SRefModel& model, const SRefShader& shader);
+
+        void renderSky(SRefSkybox skybox);
 
     public:
 

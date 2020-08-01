@@ -20,6 +20,7 @@ set(SOURCES
         scene/Scene.cpp
         scene/Actor.cpp
         scene/Camera.cpp
+        scene/Skybox.cpp
 
 #        tools/GUI.cpp
 #        tools/GLUIRenderBackend.cpp

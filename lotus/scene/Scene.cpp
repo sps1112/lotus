@@ -81,4 +81,9 @@ namespace Lotus
         }
         return v;
     }
+
+    void Scene::addSkybox(const SRefSkybox& skybox_)
+    {
+        skybox = skybox_;
+    }
 }
